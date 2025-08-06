@@ -1,3 +1,8 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* each active navlink has a class active */
+.active hr{
+    @apply block
+}
