@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { assets } from "../assets/assets";
 import { NavLink, useNavigate } from "react-router-dom";
+import RelatedDoctors from "./RelatedDoctors";
 const NavBar = () => {
     const navigate = useNavigate();
     
@@ -45,6 +46,7 @@ const NavBar = () => {
              : <button onClick={()=>navigate('/login')} className="bg-primary text-white px-8 py-3 rounded-full font-light hidden md:block">Create account </button>
         }
       </div>
+
     </div>
   );
 };
