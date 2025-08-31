@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 
 const Login = () => {
-  const [state, setState] = useState('SignUp');
+  const [state, setState] = useState('signup');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
@@ -14,7 +14,7 @@ const Login = () => {
     <form className='min-h-[80vh] flex items-center justify-center'>
       <div className='flex flex-col gap-3 items-start p-8 min-w-[340px] sm:min-w-96 border rounded-xl text-sm text-zinc-600 shadow-lg'>
         <p className='text-2xl font-semibold'>{state === 'signup' ? "Create Account" : "Login"}</p>
-        <p>Please  {state === 'SignUp' ? "sign up" : "login"} to book appointment</p>
+        <p>Please  {state === 'signup' ? "sign up" : "login"} to book appointment</p>
         {
           state === "signup" && <div className='w-full'>
           <p>Full Name</p>
