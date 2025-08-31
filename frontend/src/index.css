@@ -4,15 +4,22 @@
 @tailwind utilities;
 
 
-*{
+* {
     font-family: Outfit;
 }
 
 /* each active navlink has a class active */
-.active hr{
+.active hr {
     @apply block
 }
 
-::-webkit-scrollbar{
+/* ntl */
+::-webkit-scrollbar {
     @apply hidden
+}
+
+@media (max-width : 740px) {
+    .active p {
+        @apply text-white bg-primary
+    }
 }
