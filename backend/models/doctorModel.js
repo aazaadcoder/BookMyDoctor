@@ -14,7 +14,7 @@ const doctorSchema = new mongoose.Schema(
     fees: { type: Number, required: true },
     address: { type: Object, required: true },
     date: { type: Number, required: true },
-    slot_booked: { type: Number, default: {} },
+    slot_booked: { type: Object, default:{}  },
   },
   { minimize: false } //this will allow us to save empty object in a field
 );
