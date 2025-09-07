@@ -9,7 +9,7 @@ const AppContextProvider = (props) =>{
     }
     return (
         <AppContext.Provider value={value}>
-            {props}
+            {props.children}
         </AppContext.Provider>
     )
 }

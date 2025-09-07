@@ -9,7 +9,7 @@ const DoctorContextProvider = (props) =>{
     }
     return (
         <DoctorContext.Provider value={value}>
-            {props}
+            {props.children}
         </DoctorContext.Provider>
     )
 }

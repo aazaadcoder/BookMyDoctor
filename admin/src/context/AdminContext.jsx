@@ -10,7 +10,7 @@ const AdminContextProvider = (props) =>{
     }
     return (
         <AdminContext.Provider value={value}>
-            {props}
+            {props.children}
         </AdminContext.Provider>
     )
 }
