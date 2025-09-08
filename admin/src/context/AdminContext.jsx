@@ -1,11 +1,21 @@
 
-import { createContext } from "react";
+import { createContext, useState } from "react";
 
 export const AdminContext = createContext();
 
 const AdminContextProvider = (props) =>{
     
+    const [aToken, setAToken] = useState(localStorage.getItem('aToken') || '');                                       // state for login token 
+    const backendUrl = import.meta.env.VITE_BACKEND_URL;                            //ntl
+
+
+
+
     const value ={
+        aToken,
+        setAToken,
+        backendUrl,
+
 
     }
     return (
