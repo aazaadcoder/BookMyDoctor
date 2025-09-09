@@ -3,6 +3,7 @@ import { assets } from "../assets/assets.js";
 import { AdminContext } from "../context/AdminContext.jsx";
 import axios from 'axios';                                                        //ntl
 import { toast } from "react-toastify";
+import { AppContext } from "../context/AppContext.jsx";
 const Login = () => {
 
 
@@ -11,7 +12,9 @@ const Login = () => {
   const [email , setEmail] = useState('');
   const [password , setPassword]  = useState('');
 
-  const {setAToken, backendUrl} = useContext(AdminContext);
+  
+  const {setAToken} = useContext(AdminContext);
+  const {backendUrl} = useContext(AppContext);
 
   const onSubmitHandler = async (event) => {
     event.preventDefault();
