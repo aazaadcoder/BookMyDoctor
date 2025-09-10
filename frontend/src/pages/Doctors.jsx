@@ -9,6 +9,7 @@ const Doctors = () => {
   const [showFilter, setShowFilter] = useState(false);
   const { speciality } = useParams();
   const navigate = useNavigate();
+  
   function applyFilter() {
     if (speciality) {
       setfilteredDoc(doctors.filter((doc) => doc.speciality === speciality));
