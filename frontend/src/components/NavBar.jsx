@@ -5,7 +5,7 @@ const NavBar = () => {
   const navigate = useNavigate();
 
   const [showMenu, setShowMenu] = useState(false);
-  const [token, setToken] = useState(true); //login token
+  const [token, setToken] = useState(localStorage.getItem('token') || false); //login token
 
   return (
     <div className="flex items-center justify-between text-sm py-4 mb-5 border-b border-b-grey-400">
