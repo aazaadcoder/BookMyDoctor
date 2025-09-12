@@ -1,20 +1,14 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { assets } from "../assets/assets";
+import { AppContext } from "../context/AppContext";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const MyProfile = () => {
-  const [userData, setUserData] = useState({
-    name: "Harshit Negi",
-    image: assets.profile_pic,
-    email: "harshitnegipro@gmail.com",
-    phone: "+91 9756360382",
-    address: {
-      line1: "EIB Banglore",
-      line2: "Hozkote, Banglore",
-    },
-    gender: "male",
-    dob: "2004-01-01",
-  });
+  const [userData, setUserData] = useState({});
   const [isEdit, setIsEdit] = useState(false);
+  const {token} = useContext(AppContext);
+  
 
   return (
     <div className="max-w-lg flex flex-col text-sm">

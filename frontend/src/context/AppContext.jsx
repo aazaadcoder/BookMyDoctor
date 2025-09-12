@@ -32,11 +32,22 @@ const AppContextProvider = (props) =>{
         }
     }
 
+    const getProfileData = async () =>{
+
+        const {data}
+    }
+
 
 
     useEffect(() => {
         getDoctorsData();
-    }, [])
+    }, []);
+
+    useEffect(() => {
+        if(token){
+            getProfileData();
+        }
+    }, [token]);
 
 
 
@@ -49,7 +60,9 @@ const AppContextProvider = (props) =>{
         currencySymbol,
         backendUrl,
         token,
-        setToken
+        setToken,
+        getProfileData,
+
     }
 
 
