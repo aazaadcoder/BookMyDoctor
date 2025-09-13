@@ -71,9 +71,8 @@ const loginUser = async (req, res) => {
 
 const getUserData = async (req, res) => {
   try {
-    const {userId} = req.res;
-
-    const userData = await userModel.findOne({userId}).select('-password');
+    const {userId} = req.body;
+    const userData = await userModel.findOne({_id : userId}).select('-password');
 
     res.json({success : true, userData});
 

@@ -5,9 +5,8 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 const MyProfile = () => {
-  const [userData, setUserData] = useState({});
   const [isEdit, setIsEdit] = useState(false);
-  const {token} = useContext(AppContext);
+  const {token, userData, setUserData} = useContext(AppContext);
   
 
   return (

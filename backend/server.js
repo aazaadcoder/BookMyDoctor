@@ -6,7 +6,7 @@ import connectCloudinary from './config/cloudinary.js';
 import adminRouter from './routes/adminRoute.js';
 import doctorRouter from './routes/doctorRoutes.js';
 import userRouter from './routes/userRoutes.js';
-
+import bodyParser from 'body-parser';
 // server config
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -14,7 +14,8 @@ connectDB();
 connectCloudinary();
 
 
-// middelwares
+
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true })); 
 app.use(cors());
