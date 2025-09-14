@@ -84,8 +84,8 @@ const MyProfile = () => {
           ) : (
             <div>
               <p className="text-gray-500">
-                {userData.address.line1} <br />
-                {userData.address.line2}
+                {userData.address?.line1} <br />
+                {userData.address?.line2}
               </p>
             </div>
           )}  
@@ -109,8 +109,8 @@ const MyProfile = () => {
             </select>
           ) : (
             <p className="text-gray-400">
-              {userData.gender.charAt(0).toUpperCase() +
-                userData.gender.slice(1)}
+              {userData.gender?.charAt(0).toUpperCase() +
+                userData.gender?.slice(1)}
             </p> //ntl
           )}
           <p className="font-medium">BirthDay:</p>

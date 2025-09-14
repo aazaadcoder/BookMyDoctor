@@ -2,7 +2,8 @@ import validator from "validator";
 import bycrpt from "bcrypt";
 import userModel from "../models/userModel.js";
 import jwt from "jsonwebtoken";
-
+import { useId } from "react";
+import { v2 as cloundinary } from "cloudinary";
 const registerUser = async (req, res) => {
   try {
     const { email, name, password } = req.body;
@@ -61,7 +62,7 @@ const loginUser = async (req, res) => {
       const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
       res.json({ success: true, token, message: "Login Successful" });
     } else {
-      res.json({ success: false, message: "Invalid Credentials"});
+      res.json({ success: false, message: "Invalid Credentials" });
     }
   } catch (error) {
     console.log(error);
@@ -71,15 +72,49 @@ const loginUser = async (req, res) => {
 
 const getUserData = async (req, res) => {
   try {
-    const {userId} = req.body;
-    const userData = await userModel.findOne({_id : userId}).select('-password');
+    const { userId } = req.body;
+    const userData = await userModel
+      .findOne({ _id: userId })
+      .select("-password");
 
-    res.json({success : true, userData});
-
+    res.json({ success: true, userData });
   } catch (error) {
     console.log(error);
-    res.json({success: true, message : error.message});
+    res.json({ success: true, message: error.message });
   }
-}
+};
 
-export { registerUser, loginUser,getUserData };
+const updateProfile = async (req, res) => {
+  try {
+    const { userId, phone, address, gender, dob, name } = req.body;
+
+    const imageFile = req.file;
+
+    if (!phone || !name || !dob || !gender) {
+      return res.json({ success: false, message: "Data Missing" });
+    }
+    console.log(JSON.parse(address));
+
+    await userModel.findByIdAndUpdate(userId, {
+      name,
+      phone,
+      gender,
+      dob,
+      address: JSON.parse(address),
+    });
+    // todo : the frontend is reciving the address as a string not object 
+
+    if (imageFile) {
+      const imageUpload = await cloundinary.uploader.upload(imageFile.path, {
+        resource_type: "image",
+      });
+      const imageUrl = imageUpload.secure_url;
+
+      await userModel.findByIdAndUpdate(userId, { image: imageUrl });
+    }
+    res.json({success : true, message : "Profile Updated"})
+  } catch (error) {
+    res.json({success : false, message : error.message});
+  }
+};
+export { registerUser, loginUser, getUserData,updateProfile };

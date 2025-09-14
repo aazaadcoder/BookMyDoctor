@@ -7,8 +7,8 @@ const userAuth = async (req, res, next) => {
             return res.json({success : false, message : "Unautharized Access"})
         }
 
-        const tokenDecode = jwt.decode(token, process.env.JWT_SECRET);
-        req.body = {};
+        const tokenDecode = jwt.verify(token, process.env.JWT_SECRET);
+        if(req.body == undefined) req.body = {};
         req.body.userId = tokenDecode.id;
         next();
     } catch (error) {
