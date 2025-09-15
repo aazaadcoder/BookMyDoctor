@@ -93,6 +93,7 @@ const updateProfile = async (req, res) => {
     if (!phone || !name || !dob || !gender) {
       return res.json({ success: false, message: "Data Missing" });
     }
+    
     console.log(JSON.parse(address));
 
     await userModel.findByIdAndUpdate(userId, {

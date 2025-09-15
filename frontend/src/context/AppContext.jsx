@@ -30,16 +30,18 @@ const AppContextProvider = (props) => {
 
   const getProfileData = async () => {
     try {
-      const { data } = await axios.get(backendUrl + "/api/user/profile-data", {headers: {token}});
+      const { data } = await axios.get(backendUrl + "/api/user/profile-data", {
+        headers: { token },
+      });
       console.log(data);
 
       if (data.success) {
         setUserData(data.userData);
       } else {
-        toast.error("Failed to Load User Data");
+        toast.error(data.message);
       }
     } catch (error) {
-        toast.error(error.message);
+      toast.error(error.message);
     }
   };
 
@@ -61,7 +63,8 @@ const AppContextProvider = (props) => {
     token,
     setToken,
     getProfileData,
-    userData
+    userData,
+    setUserData,
   };
 
   return (

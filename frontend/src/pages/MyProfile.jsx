@@ -3,15 +3,57 @@ import { assets } from "../assets/assets";
 import { AppContext } from "../context/AppContext";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import axios from 'axios';
+
 
 const MyProfile = () => {
   const [isEdit, setIsEdit] = useState(false);
-  const {token, userData, setUserData} = useContext(AppContext);
-  
+  const { token, userData, setUserData, backendUrl,getProfileData } = useContext(AppContext);
+  const [image , setImage] = useState(false);
+
+  const updateProfile = async () => {
+    try {
+
+      const formData = new FormData();
+
+      formData.append('name', userData.name);
+      formData.append('phone', userData.phone);
+      formData.append('dob', userData.dob);
+      formData.append('gender', userData.gender);
+      formData.append('address', JSON.stringify(userData.address));
+      console.log(formData.name);
+      image && formData.append('image', image);
+
+      const {data} = await axios.post(backendUrl + '/api/user/update-profile', formData, {headers : { token}});
+
+      if(data.success){
+        toast.success(data.message);
+        await getProfileData();
+        setImage(false);
+        setIsEdit(false);
+      }else{
+        toast.error(data.message);
+      }
+      
+    } catch (error) {
+      console.log(error);
+      toast.error(error.message);
+    }
+  };
 
   return (
     <div className="max-w-lg flex flex-col text-sm">
-      <img className="w-36 rounded" src={userData.image} alt="" />
+      {isEdit ? (
+        <label htmlFor="image">
+          <div className="inline-block relative cursor-pointer">
+            <img className="w-36 rounded opacity-75 object-fill" src={image ? URL.createObjectURL(image) : userData.image} alt="" />
+            <img className="w-10 absolute bottom-12 right-12" src={image ? "" : assets.upload_icon}alt="" />
+          </div>
+          <input onChange={(e) => setImage(e.target.files[0])} type="file" id="image" hidden />
+        </label>
+      ) : (
+        <img className="w-36 rounded" src={userData.image} alt="" />
+      )}
 
       {isEdit ? ( //ntl
         <input
@@ -56,7 +98,7 @@ const MyProfile = () => {
                 <input
                   className="bg-gray-50"
                   type="text"
-                  value={userData.address.line1}
+                  value={userData.address?.line1}
                   onChange={
                     (e) =>
                       setUserData((prev) => ({
@@ -71,7 +113,7 @@ const MyProfile = () => {
                 <input
                   className="bg-gray-50"
                   type="text"
-                  value={userData.address.line2}
+                  value={userData.address?.line2}
                   onChange={(e) =>
                     setUserData((prev) => ({
                       ...prev,
@@ -88,13 +130,15 @@ const MyProfile = () => {
                 {userData.address?.line2}
               </p>
             </div>
-          )}  
+          )}
         </div>
       </div>
 
-      <div> 
+      <div>
         <p className="text-neutral-500 mt-3 underline">BASIC INFORMATION</p>
-        <div className="grid grid-cols-[1fr_3fr] gap-y-2.5 mt-3 text-neutral-700">              {/* ntl */}
+        <div className="grid grid-cols-[1fr_3fr] gap-y-2.5 mt-3 text-neutral-700">
+          {" "}
+          {/* ntl */}
           <p className="font-medium">Gender: </p>
           {isEdit ? (
             <select
@@ -109,8 +153,7 @@ const MyProfile = () => {
             </select>
           ) : (
             <p className="text-gray-400">
-              {userData.gender?.charAt(0).toUpperCase() +
-                userData.gender?.slice(1)}
+              {userData.gender}
             </p> //ntl
           )}
           <p className="font-medium">BirthDay:</p>
@@ -133,7 +176,7 @@ const MyProfile = () => {
         {isEdit ? (
           <button
             className="border border-primary rounded-full py-2 px-8 hover:bg-primary hover:text-white transition-all"
-            onClick={() => setIsEdit(false)}
+            onClick={updateProfile}
           >
             Save Information
           </button>
