@@ -9,8 +9,10 @@ import axios from 'axios';
 const MyProfile = () => {
   const [isEdit, setIsEdit] = useState(false);
   const { token, userData, setUserData, backendUrl,getProfileData } = useContext(AppContext);
-  const [image , setImage] = useState(false);
+  const [image , setImage] = useState('');
 
+  // console.log(userData);
+  // userData && console.log(JSON.parse(userData.address));
   const updateProfile = async () => {
     try {
 
@@ -21,7 +23,7 @@ const MyProfile = () => {
       formData.append('dob', userData.dob);
       formData.append('gender', userData.gender);
       formData.append('address', JSON.stringify(userData.address));
-      console.log(formData.name);
+
       image && formData.append('image', image);
 
       const {data} = await axios.post(backendUrl + '/api/user/update-profile', formData, {headers : { token}});

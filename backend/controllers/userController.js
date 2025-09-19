@@ -87,14 +87,14 @@ const getUserData = async (req, res) => {
 const updateProfile = async (req, res) => {
   try {
     const { userId, phone, address, gender, dob, name } = req.body;
-
+    console.log(address);
+    console.log(JSON.parse(address));
     const imageFile = req.file;
 
     if (!phone || !name || !dob || !gender) {
       return res.json({ success: false, message: "Data Missing" });
     }
     
-    console.log(JSON.parse(address));
 
     await userModel.findByIdAndUpdate(userId, {
       name,

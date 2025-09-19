@@ -15,10 +15,10 @@ const AppContextProvider = (props) => {
   const getDoctorsData = async () => {
     try {
       const { data } = await axios.get(backendUrl + "/api/doctor/list");
-      console.log(data);
+      // console.log(data);
       if (data.success) {
         setDoctors(data.doctors);
-        console.log(data.doctors);
+        // console.log(data.doctors);
         toast.success(data.message);
       } else {
         toast.error(data.message);
@@ -33,9 +33,10 @@ const AppContextProvider = (props) => {
       const { data } = await axios.get(backendUrl + "/api/user/profile-data", {
         headers: { token },
       });
-      console.log(data);
+      console.log(data.userData);
 
       if (data.success) {
+        data.userData.address = JSON.parse(data.userData.address);
         setUserData(data.userData);
       } else {
         toast.error(data.message);
