@@ -1,14 +1,14 @@
-import { Router } from "express";
-import upload from '../middlewares/multer.js'
+import express from "express";
 
 import { getUserData, loginUser, registerUser, updateProfile } from "../controllers/userController.js";
 import { userAuth } from "../middlewares/userAuth.js";
+import upload from "../middlewares/multer.js";
 
-const userRouter = Router();
+const userRouter = express.Router();
 
 userRouter.post("/register", registerUser);
 userRouter.post("/login", loginUser);
 userRouter.get("/profile-data", userAuth, getUserData);
-userRouter.post("/update-profile", userAuth, updateProfile);
+userRouter.post("/update-profile",upload.single('image'), userAuth, updateProfile);
 
 export default userRouter;

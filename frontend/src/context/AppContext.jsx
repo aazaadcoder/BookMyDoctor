@@ -33,10 +33,9 @@ const AppContextProvider = (props) => {
       const { data } = await axios.get(backendUrl + "/api/user/profile-data", {
         headers: { token },
       });
-      console.log(data.userData);
+      console.log(data.userData.address?.line1);
 
       if (data.success) {
-        data.userData.address = JSON.parse(data.userData.address);
         setUserData(data.userData);
       } else {
         toast.error(data.message);

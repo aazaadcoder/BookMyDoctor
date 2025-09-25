@@ -72,7 +72,7 @@ const loginUser = async (req, res) => {
 
 const getUserData = async (req, res) => {
   try {
-    const { userId } = req.body;
+    const { userId } = req;
     const userData = await userModel
       .findOne({ _id: userId })
       .select("-password");
@@ -86,12 +86,17 @@ const getUserData = async (req, res) => {
 
 const updateProfile = async (req, res) => {
   try {
-    const { userId, phone, address, gender, dob, name } = req.body;
-    console.log(address);
-    console.log(JSON.parse(address));
+    const { userId } = req;
+    const { phone, address, gender, dob, name } = req.body;
+
+
     const imageFile = req.file;
 
     if (!phone || !name || !dob || !gender) {
+      console.log(phone)
+      console.log(name)
+      console.log(dob)
+      console.log(gender)
       return res.json({ success: false, message: "Data Missing" });
     }
     
@@ -113,6 +118,7 @@ const updateProfile = async (req, res) => {
 
       await userModel.findByIdAndUpdate(userId, { image: imageUrl });
     }
+    
     res.json({success : true, message : "Profile Updated"})
   } catch (error) {
     res.json({success : false, message : error.message});

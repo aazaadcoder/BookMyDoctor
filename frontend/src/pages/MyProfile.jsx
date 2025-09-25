@@ -3,40 +3,43 @@ import { assets } from "../assets/assets";
 import { AppContext } from "../context/AppContext";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import axios from 'axios';
-
+import axios from "axios";
 
 const MyProfile = () => {
   const [isEdit, setIsEdit] = useState(false);
-  const { token, userData, setUserData, backendUrl,getProfileData } = useContext(AppContext);
-  const [image , setImage] = useState('');
+  const { token, userData, setUserData, backendUrl, getProfileData } =
+    useContext(AppContext);
+  const [image, setImage] = useState("");
 
-  // console.log(userData);
-  // userData && console.log(JSON.parse(userData.address));
   const updateProfile = async () => {
     try {
-
       const formData = new FormData();
 
-      formData.append('name', userData.name);
-      formData.append('phone', userData.phone);
-      formData.append('dob', userData.dob);
-      formData.append('gender', userData.gender);
-      formData.append('address', JSON.stringify(userData.address));
+      formData.append("name", userData.name);
+      formData.append("phone", userData.phone);
+      formData.append("dob", userData.dob);
+      formData.append("gender", userData.gender);
+      formData.append("address", JSON.stringify(userData.address));
 
-      image && formData.append('image', image);
+      image && formData.append("image", image);
 
-      const {data} = await axios.post(backendUrl + '/api/user/update-profile', formData, {headers : { token}});
+      const { data } = await axios.post(
+        backendUrl + "/api/user/update-profile",
+        formData,
+        {
+          headers: { token },
+        }
+      );
+      // todo : add a loader when updating profile 
 
-      if(data.success){
+      if (data.success) {
         toast.success(data.message);
         await getProfileData();
         setImage(false);
         setIsEdit(false);
-      }else{
+      } else {
         toast.error(data.message);
       }
-      
     } catch (error) {
       console.log(error);
       toast.error(error.message);
@@ -48,10 +51,23 @@ const MyProfile = () => {
       {isEdit ? (
         <label htmlFor="image">
           <div className="inline-block relative cursor-pointer">
-            <img className="w-36 rounded opacity-75 object-fill" src={image ? URL.createObjectURL(image) : userData.image} alt="" />
-            <img className="w-10 absolute bottom-12 right-12" src={image ? "" : assets.upload_icon}alt="" />
+            <img
+              className="w-36 rounded opacity-75 object-fill"
+              src={image ? URL.createObjectURL(image) : userData.image}
+              alt=""
+            />
+            <img
+              className="w-10 absolute bottom-12 right-12"
+              src={image ? "" : assets.upload_icon}
+              alt=""
+            />
           </div>
-          <input onChange={(e) => setImage(e.target.files[0])} type="file" id="image" hidden />
+          <input
+            onChange={(e) => setImage(e.target.files[0])}
+            type="file"
+            id="image"
+            hidden
+          />
         </label>
       ) : (
         <img className="w-36 rounded" src={userData.image} alt="" />
@@ -154,9 +170,7 @@ const MyProfile = () => {
               <option value="female">Female</option>
             </select>
           ) : (
-            <p className="text-gray-400">
-              {userData.gender}
-            </p> //ntl
+            <p className="text-gray-400">{userData.gender}</p> //ntl
           )}
           <p className="font-medium">BirthDay:</p>
           {isEdit ? (
