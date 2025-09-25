@@ -32,4 +32,16 @@ const getDoctorList = async (req, res) => {
   }
 };
 
+// api to get appointment details of the doctor 
+// const getAppointments = async (req, res) => {
+//   try {
+//     const {docId} = req.body;
+//     const docData = await doctorModel.findById(docId);
+//   } catch (error) {
+    
+//   }
+
+
+// }
+
 export { changeAvailability, getDoctorList };

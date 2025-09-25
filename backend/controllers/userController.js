@@ -4,6 +4,8 @@ import userModel from "../models/userModel.js";
 import jwt from "jsonwebtoken";
 import { useId } from "react";
 import { v2 as cloundinary } from "cloudinary";
+import doctorModel from "../models/doctorModel.js";
+import appointmentModel from "../models/appointmentModel.js";
 const registerUser = async (req, res) => {
   try {
     const { email, name, password } = req.body;
@@ -89,17 +91,15 @@ const updateProfile = async (req, res) => {
     const { userId } = req;
     const { phone, address, gender, dob, name } = req.body;
 
-
     const imageFile = req.file;
 
     if (!phone || !name || !dob || !gender) {
-      console.log(phone)
-      console.log(name)
-      console.log(dob)
-      console.log(gender)
+      console.log(phone);
+      console.log(name);
+      console.log(dob);
+      console.log(gender);
       return res.json({ success: false, message: "Data Missing" });
     }
-    
 
     await userModel.findByIdAndUpdate(userId, {
       name,
@@ -108,7 +108,7 @@ const updateProfile = async (req, res) => {
       dob,
       address: JSON.parse(address),
     });
-    // todo : the frontend is reciving the address as a string not object 
+    // todo : the frontend is reciving the address as a string not object
 
     if (imageFile) {
       const imageUpload = await cloundinary.uploader.upload(imageFile.path, {
@@ -118,10 +118,67 @@ const updateProfile = async (req, res) => {
 
       await userModel.findByIdAndUpdate(userId, { image: imageUrl });
     }
-    
-    res.json({success : true, message : "Profile Updated"})
+
+    res.json({ success: true, message: "Profile Updated" });
   } catch (error) {
-    res.json({success : false, message : error.message});
+    res.json({ success: false, message: error.message });
   }
 };
-export { registerUser, loginUser, getUserData,updateProfile };
+
+const bookAppointment = async (req, res) => {
+  try {
+    const { userId } = req;
+    const { docId, slotTime, slotDate } = req.body;
+
+    // get docData
+    const docData = await doctorModel.findById(docId).select("-password");
+
+    // check if doctor is available
+    if (!docData.available) {
+      return res.json({ success: false, message: "Doctor not Available" });
+    }
+
+    // check for slot availablity
+    let slots_booked = docData.slots_booked;
+    if (slots_booked[slotDate]) {
+      if (slots_booked[slotDate].includes(slotTime)) {
+        return res.json({ success: false, message: "Slot Not Available" });
+      } else {
+        slots_booked[slotDate].push(slotTime);
+      }
+    } else {
+      slots_booked[slotDate] = [];
+      slots_booked[slotDate].push(slotTime);
+    }
+
+    // delete old slots_data
+    delete docData.slots_booked;
+
+    // get userData
+    const userData = await userModel.findById(userId).select("-password");
+
+    // make an apointment
+    const appointmentData = {
+      userId,
+      docId,
+      userData,
+      docData,
+      amount: docData.fees,
+      slotTime,
+      slotDate,
+      date: Date.now(),
+    };
+
+    const newAppointment = new appointmentModel(appointmentData);
+    await newAppointment.save();
+
+    // save new slots data in docData
+    await doctorModel.findByIdAndUpdate(docId, { slots_booked });
+
+    res.json({ success: true, message: "Appointment Booked" });
+  } catch (error) {
+    console.log(error);
+    res.json({ success: false, message: error.message });
+  }
+};
+export { registerUser, loginUser, getUserData, updateProfile, bookAppointment };
