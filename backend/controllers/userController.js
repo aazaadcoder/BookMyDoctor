@@ -154,7 +154,6 @@ const bookAppointment = async (req, res) => {
     // delete old slots_data
     delete docData.slots_booked;
 
-
     // get userData
     const userData = await userModel.findById(userId).select("-password");
 
@@ -184,16 +183,58 @@ const bookAppointment = async (req, res) => {
 };
 
 const getAppointmentsList = async (req, res) => {
-  try{
-    const {userId} = req;
+  try {
+    const { userId } = req;
 
-    if(!userId) return res.json({success: false, message: "Login to get Appointments"});
-    const appointmentData = await appointmentModel.find({userId}).sort({date : -1});
+    if (!userId)
+      return res.json({ success: false, message: "Login to get Appointments" });
+    const appointmentData = await appointmentModel
+      .find({ userId })
+      .sort({ date: -1 });
 
-    res.json({success: true, appointmentData});
+    res.json({ success: true, appointmentData });
   } catch (error) {
     console.log(error);
-    res.json({success: false, message: error.message});
+    res.json({ success: false, message: error.message });
   }
-}
-export { registerUser, loginUser, getUserData, updateProfile, bookAppointment, getAppointmentsList };
+};
+
+const cancelAppointment = async (req, res) => {
+  try {
+    const { userId } = req;
+    const { appointmentId } = req.body;
+
+    const appointmentData = await appointmentModel.findById(appointmentId);
+
+    // check if userid of the same as of appointment
+    if (appointmentData.userId !== userId) {
+      return res.json({
+        success: flse,
+        message: "You are not Authorized to Cancel this Appointment",
+      });
+    }
+
+    // release doctor slot
+    const { docId, slotDate, slotTime } = appointmentData;
+    const docData = await doctorModel.findById(docId);
+    let slots_booked = docData.slots_booked;
+
+    // remove the slotTime from slots_booked[slotDate] array
+    await doctorModel.findByIdAndUpdate(docId, { slots_booked });
+
+    res.json({ success: true, message: "Appointment Cancelled" });
+  } catch (error) {
+    console.log(error);
+    res.json({ success: false, message: error.message });
+  }
+};
+
+export {
+  registerUser,
+  loginUser,
+  getUserData,
+  updateProfile,
+  bookAppointment,
+  getAppointmentsList,
+  cancelAppointment,
+};
