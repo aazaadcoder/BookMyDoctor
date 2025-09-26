@@ -154,6 +154,7 @@ const bookAppointment = async (req, res) => {
     // delete old slots_data
     delete docData.slots_booked;
 
+
     // get userData
     const userData = await userModel.findById(userId).select("-password");
 

@@ -11,6 +11,6 @@ userRouter.post("/login", loginUser);
 userRouter.get("/profile-data", userAuth, getUserData);
 userRouter.post("/update-profile",upload.single('image'), userAuth, updateProfile);
 userRouter.post("/book-appointment", userAuth, bookAppointment);
-userRouter.post("/appointments-list", userAuth, getAppointmentsList);
+userRouter.get("/appointments-list", userAuth, getAppointmentsList);
 
 export default userRouter;
