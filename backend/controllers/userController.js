@@ -222,6 +222,9 @@ const cancelAppointment = async (req, res) => {
     let slots_booked = docData.slots_booked;
 
     // remove the slotTime from slots_booked[slotDate] array
+    slots_booked[slotDate] = slots_booked[slotDate].filter((item) => item != slotTime);
+
+    // update slot in docData
     await doctorModel.findByIdAndUpdate(docId, { slots_booked });
 
     res.json({ success: true, message: "Appointment Cancelled" });
