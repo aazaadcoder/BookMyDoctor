@@ -207,12 +207,14 @@ const cancelAppointment = async (req, res) => {
     const appointmentData = await appointmentModel.findById(appointmentId);
 
     // check if userid of the same as of appointment
-    if (appointmentData.userId !== userId) {
+    if (appointmentData.userId.toString() !== userId) {
       return res.json({
-        success: flse,
+        success: false,
         message: "You are not Authorized to Cancel this Appointment",
       });
     }
+
+    await appointmentModel.findByIdAndUpdate(appointmentId, {cancelled : true});
 
     // release doctor slot
     const { docId, slotDate, slotTime } = appointmentData;

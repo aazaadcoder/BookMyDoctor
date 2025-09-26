@@ -26,6 +26,22 @@ const MyAppointments = () => {
     }
   }
 
+  const cancelAppointment = async (appointmentId) =>{
+    try {
+      const {data} = await axios.post(backendUrl + '/api/user/cancel-appointment', {appointmentId}, {headers : {token}});
+
+      if(data.success){
+        toast.success(data.message);
+        fetchAppointments();
+      }else{
+        toast.error(data.message);
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error(error.message);
+    }
+  }
+
   const formatDate = (slotDate) => {
     const date = slotDate.split('_');
     return date[0] + ", " + months[date[1]] + ", "  + date[2];
@@ -56,8 +72,11 @@ const MyAppointments = () => {
             </div>
             <div></div>
             <div className='flex flex-col justify-end gap-2'>
-              <button className='text-sm text-stone-500 text-center sm:min-w-48 py-2 border rounded hover:bg-primary hover:text-white transition-all duration-300'>Pay Online</button>
-              <button className='text-sm text-stone-500 text-center sm:min-w-48 py-2 border rounded hover:bg-red-600 hover:text-white transition-all duration-300'>Cancel Appointment</button>
+              {!item.cancelled && <button className='text-sm text-stone-500 text-center sm:min-w-48 py-2 border rounded hover:bg-primary hover:text-white transition-all duration-300'>Pay Online</button>}
+              {!item.cancelled && <button onClick={() => cancelAppointment(item._id)} className='text-sm text-stone-500 text-center sm:min-w-48 py-2 border rounded hover:bg-red-600 hover:text-white transition-all duration-300'>Cancel Appointment</button>}
+              {item.cancelled && <button className='text-sm sm:min-w-48 py-2 border rounded border-red-500 text-red-500 '>Appointment Cancelled</button>}
+
+              
             </div>
           </div>
         ))}
