@@ -8,7 +8,14 @@ import axios from "axios";
 
 const Appointment = () => {
   const { docId } = useParams();
-  const { doctors, currencySymbol, getDoctorsData, backendUrl, token } = useContext(AppContext);
+  const {
+    doctors,
+    currencySymbol,
+    getDoctorsData,
+    backendUrl,
+    token,
+    appointments,
+  } = useContext(AppContext);
   const daysOfWeek = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
   const [docInfo, setDocInfo] = useState(null);
   const [docSlot, setDocSlot] = useState([]);
@@ -21,6 +28,7 @@ const Appointment = () => {
     setDocInfo(docData); //React state updates with setState (including setDocInfo) are asynchronous and do not take effect immediately
   }
 
+  // todo : when i go back in my react the page is not rerendering only updating when refrshing 
   async function getAvailableSlots() {
     setDocSlot([]);
     const today = new Date();
@@ -37,7 +45,9 @@ const Appointment = () => {
 
       // getting start time with index
       if (today.getDate() === currentDate.getDate()) {
-        currentDate.setHours(currentDate.getHours() > 10 ? currentDate.getHours() + 1 : 10);
+        currentDate.setHours(
+          currentDate.getHours() > 10 ? currentDate.getHours() + 1 : 10
+        );
         currentDate.setMinutes(currentDate.getMinutes() > 30 ? 30 : 0);
       } else {
         currentDate.setHours(10);
@@ -56,20 +66,23 @@ const Appointment = () => {
         let day = currentDate.getDate();
         let month = currentDate.getMonth() + 1;
         let year = currentDate.getFullYear();
-        
-        const slotDate = day + '_' + month + '_' + year;
+
+        const slotDate = day + "_" + month + "_" + year;
         const slotTime = formattedTime;
 
-        const isSlotAvailable = docInfo.slots_booked[slotDate] && docInfo.slots_booked[slotDate].includes(slotTime) ? false : true;
+        const isSlotAvailable =
+          docInfo.slots_booked[slotDate] &&
+          docInfo.slots_booked[slotDate].includes(slotTime)
+            ? false
+            : true;
 
         // add slot to array if available
-        if(isSlotAvailable){
+        if (isSlotAvailable) {
           timeSlots.push({
-          datetime: new Date(currentDate),
-          time: formattedTime,
-        });
+            datetime: new Date(currentDate),
+            time: formattedTime,
+          });
         }
-        
 
         // increment time by 30 min
         currentDate.setMinutes(currentDate.getMinutes() + 30);
@@ -80,13 +93,12 @@ const Appointment = () => {
     }
   }
 
-  // fxn to book appointment 
+  // fxn to book appointment
   const bookAppointment = async () => {
-
     // check if user is logged in and has token
-    if(!token){
+    if (!token) {
       toast.warning("Login to Book Appointment");
-      return navigate('/login');
+      return navigate("/login");
     }
 
     // get the selected date , month , year that is get slotDate
@@ -96,28 +108,28 @@ const Appointment = () => {
     let month = date.getMonth() + 1;
     let year = date.getFullYear();
 
-    const slotDate = day + '_' + month + '_' + year;
+    const slotDate = day + "_" + month + "_" + year;
 
     try {
       // api call to make appointment
-      const {data} = await axios.post(backendUrl + '/api/user/book-appointment', {docId, slotDate, slotTime}, {headers : {token}});
+      const { data } = await axios.post(
+        backendUrl + "/api/user/book-appointment",
+        { docId, slotDate, slotTime },
+        { headers: { token } }
+      );
 
-      if(data.success){
+      if (data.success) {
         toast.success(data.message);
         getDoctorsData();
-        navigate('/my-appointments')
-      }else{
+        navigate("/my-appointments");
+      } else {
         toast.error(data.message);
       }
     } catch (error) {
       console.log(error);
       toast.error(error.message);
     }
-
-
-
-
-  }
+  };
 
   useEffect(() => {
     fetchDocInfo();
@@ -125,7 +137,7 @@ const Appointment = () => {
 
   useEffect(() => {
     getAvailableSlots();
-  }, [docInfo]);
+  }, [docInfo, appointments]);
 
   // useEffect(() => {
   //   console.log(docSlot);
@@ -223,7 +235,10 @@ const Appointment = () => {
               ))}
           </div>
 
-          <button onClick={bookAppointment} className="bg-primary text-sm font-light text-white px-14 py-3 rounded-full my-6">
+          <button
+            onClick={bookAppointment}
+            className="bg-primary text-sm font-light text-white px-14 py-3 rounded-full my-6"
+          >
             Book an Appointment
           </button>
         </div>

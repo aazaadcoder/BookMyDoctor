@@ -6,8 +6,7 @@ import { toast } from 'react-toastify';
 import { useEffect } from 'react';
 
 const MyAppointments = () => {
-  const {backendUrl, token} = useContext(AppContext);
-  const [appointments, setAppointments] = useState([]);
+  const {backendUrl, token, appointments, setAppointments, getDoctorsData} = useContext(AppContext);
 
   const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
@@ -33,6 +32,7 @@ const MyAppointments = () => {
       if(data.success){
         toast.success(data.message);
         fetchAppointments();
+        getDoctorsData();  // to reload the updated doctor slot data 
       }else{
         toast.error(data.message);
       }
