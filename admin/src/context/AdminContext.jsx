@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 
@@ -8,6 +8,7 @@ const AdminContextProvider = (props) => {
   const [aToken, setAToken] = useState(localStorage.getItem("aToken") || ""); // state for login token
   const [doctors, setDoctors] = useState([]);
   const [appointmentData, setAppointmentData] = useState([]);
+  const [dashboardData, setDashboardDate] = useState(false);  // needs to be false by default else cases issue in dashboard rendering
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
   const getAllDoctors = async () => {
@@ -53,7 +54,6 @@ const AdminContextProvider = (props) => {
     );
 
     if (data.success) {
-      console.log(data.appointmentData);
       setAppointmentData(data.appointmentData);
     } else {
       toast.error(data.message);
@@ -68,10 +68,28 @@ const AdminContextProvider = (props) => {
         { headers: { aToken } }
       );
 
-      if(data.success){
+      if (data.success) {
         getAllAppointments();
         toast.success("Appointment Cancelled Scuccessfully");
-      }else{
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error(error.message);
+    }
+  };
+
+  const getDashboardData = async () => {
+    try {
+      const { data } = await axios.get(
+        backendUrl + "/api/admin/dashboard-data",
+        { headers: { aToken } }
+      );
+
+      if (data.success) {
+        setDashboardDate(data.dashboardData);
+      } else {
         toast.error(data.message);
       }
     } catch (error) {
@@ -89,6 +107,8 @@ const AdminContextProvider = (props) => {
     getAllAppointments,
     appointmentData,
     cancelAppointment,
+    getDashboardData,
+    dashboardData,
   };
   return (
     <AdminContext.Provider value={value}>
