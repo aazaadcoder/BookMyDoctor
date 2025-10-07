@@ -60,7 +60,12 @@ const AllAppointments = () => {
               <p>{item.docData.name}</p>
             </div>
             <p>{currencySymbol} {item.docData.fees}</p>
-            <img className="w-10 cursor-pointer" src={assets.cancel_icon} alt="" />
+            {
+              item.cancelled 
+              ? <p className="text-red-400 text-xs font-medium">Cancelled</p>
+              : <img className="w-10 cursor-pointer" src={assets.cancel_icon} alt="" />
+
+            }
           </div>
         ))}
       </div>
