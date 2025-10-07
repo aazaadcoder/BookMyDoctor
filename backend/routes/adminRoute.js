@@ -1,7 +1,7 @@
 import express from 'express'
 
 import upload from '../middlewares/multer.js'
-import {addDoctor,getAllDoctors,loginAdmin } from '../controllers/adminController.js';
+import {addDoctor,getAllAppointments,getAllDoctors,loginAdmin } from '../controllers/adminController.js';
 import { authAdmin } from '../middlewares/authAdmin.js';
 import { changeAvailability } from '../controllers/doctorController.js';
 
@@ -13,6 +13,7 @@ adminRouter.post('/add-doctor',authAdmin,  upload.single('image'), addDoctor);
 adminRouter.post('/login', loginAdmin);
 adminRouter.get('/all-doctors', authAdmin, getAllDoctors);
 adminRouter.post('/change-availability', authAdmin, changeAvailability);
+adminRouter.get('/appointment-list', authAdmin, getAllAppointments);
 
 
 

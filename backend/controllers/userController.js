@@ -6,6 +6,8 @@ import { useId } from "react";
 import { v2 as cloundinary } from "cloudinary";
 import doctorModel from "../models/doctorModel.js";
 import appointmentModel from "../models/appointmentModel.js";
+import razorpay from 'razorpay';
+
 const registerUser = async (req, res) => {
   try {
     const { email, name, password } = req.body;
@@ -234,6 +236,18 @@ const cancelAppointment = async (req, res) => {
   }
 };
 
+// api to make payment of appointment using razor pay
+
+const razorPayInstance = new razorpay(
+  {
+    key_id : process,
+    key_secret: ""
+  }
+)
+
+const paymentRazorPay = async (req, res) => {
+
+}
 export {
   registerUser,
   loginUser,
