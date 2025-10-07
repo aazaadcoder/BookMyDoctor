@@ -7,7 +7,7 @@ export const AdminContext = createContext();
 const AdminContextProvider = (props) => {
   const [aToken, setAToken] = useState(localStorage.getItem("aToken") || ""); // state for login token
   const [doctors, setDoctors] = useState([]);
-  const [appointmentData , setAppointmentData] = useState([]);
+  const [appointmentData, setAppointmentData] = useState([]);
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
   const getAllDoctors = async () => {
@@ -47,13 +47,36 @@ const AdminContextProvider = (props) => {
   };
 
   const getAllAppointments = async () => {
-    const {data} = await axios.get(backendUrl + '/api/admin/appointment-list', {headers : {aToken}})
+    const { data } = await axios.get(
+      backendUrl + "/api/admin/appointment-list",
+      { headers: { aToken } }
+    );
 
-    if(data.success){
+    if (data.success) {
       console.log(data.appointmentData);
       setAppointmentData(data.appointmentData);
-    }else{
+    } else {
       toast.error(data.message);
+    }
+  };
+
+  const cancelAppointment = async (appointmentId) => {
+    try {
+      const { data } = await axios.post(
+        backendUrl + "/api/admin/appointment-cancel",
+        { appointmentId },
+        { headers: { aToken } }
+      );
+
+      if(data.success){
+        getAllAppointments();
+        toast.success("Appointment Cancelled Scuccessfully");
+      }else{
+        toast.error(data.message);
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error(error.message);
     }
   };
 
@@ -65,6 +88,7 @@ const AdminContextProvider = (props) => {
     changeAvailability,
     getAllAppointments,
     appointmentData,
+    cancelAppointment,
   };
   return (
     <AdminContext.Provider value={value}>
