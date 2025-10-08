@@ -1,6 +1,7 @@
 import doctorModel from "../models/doctorModel.js";
 import bycrpt from "bcrypt";
-import jwt from 'jsonwebtoken';
+import jwt from "jsonwebtoken";
+import appointmentModel from "../models/appointmentModel.js";
 const changeAvailability = async (req, res) => {
   try {
     const { docId } = req.body;
@@ -32,7 +33,6 @@ const getDoctorList = async (req, res) => {
 };
 
 // api for doctor login
-
 const loginDoctor = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -64,15 +64,24 @@ const loginDoctor = async (req, res) => {
   }
 };
 
-// api to get appointment details of the doctor
-// const getAppointments = async (req, res) => {
-//   try {
-//     const {docId} = req.body;
-//     const docData = await doctorModel.findById(docId);
-//   } catch (error) {
+// api to get all appointments of the doctor
+const getAppointments = async (req, res) => {
+  try {
+    const { docId } = req;
+    const docData = await doctorModel.findById(docId);
 
-//   }
+    if (!docData) {
+      return res.json({ success: false, message: "Invaild Credentials" });
+    }
 
-// }
+    // get all appointments
+    const appointmentData = await appointmentModel.find({ docId });
 
-export { changeAvailability, getDoctorList, loginDoctor };
+    res.json({ success: true, appointmentData });
+  } catch (error) {
+    console.log(error);
+    res.json({ success: false, message: error.message });
+  }
+};
+
+export { changeAvailability, getDoctorList, loginDoctor, getAppointments };
