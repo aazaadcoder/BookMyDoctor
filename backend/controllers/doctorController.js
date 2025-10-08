@@ -84,4 +84,80 @@ const getAppointments = async (req, res) => {
   }
 };
 
-export { changeAvailability, getDoctorList, loginDoctor, getAppointments };
+// api to cancel a appointment
+const cancelAppointment = async (req, res) => {
+  try {
+    const { appointmentId } = req.body;
+
+    if (!appointmentId) {
+      return res.json({ success: false, message: "missing credentials " });
+    }
+    const { docId } = req;
+    const appointmentData = await appointmentModel.findById(appointmentId);
+
+    // check is doctor is same as appointment doctor
+    if (docId !== appointmentData.docId) {
+      return res.json({ success: false, message: "Unauthorized Action" });
+    }
+
+    await appointmentModel.findByIdAndUpdate(appointmentId, {
+      cancelled: true,
+    });
+
+    // release doctor slot
+    const { slotDate, slotTime } = appointmentData;
+    const docData = await doctorModel.findById(docId);
+    let slots_booked = docData.slots_booked;
+
+    // remove the slotTime from slots_booked[slotDate] array
+    slots_booked[slotDate] = slots_booked[slotDate].filter(
+      (item) => item != slotTime
+    );
+
+    // update slot in docData
+    await doctorModel.findByIdAndUpdate(docId, { slots_booked });
+
+    res.json({ success: true, message: "Appointment Cancelled" });
+  } catch (error) {
+    console.log(error);
+    res.json({ success: false, message: error.message });
+  }
+};
+
+// api to mark a appointment complete
+const completeAppointment = async (req, res) => {
+  try {
+    const { appointmentId } = req.body;
+    const { docId } = req;
+
+    const appointmentData = await appointmentModel.findById(appointmentId);
+    if (!appointmentData) {
+      return res.json({
+        success: false,
+        message: "Invaild Request",
+      });
+    }
+    if (appointmentData.docId === docId) {
+      await appointmentModel.findByIdAndUpdate(appointmentData.docId, {
+        isCompleted: true,
+      });
+      res.json({ success: true, message: "Appointment Marked Complete" });
+    } else {
+      res.json({
+        success: false,
+        message: "Unauthorized Action",
+      });
+    }
+  } catch (error) {
+    console.log(error);
+    res.json({ Success: false, message: error.message });
+  }
+};
+export {
+  changeAvailability,
+  getDoctorList,
+  loginDoctor,
+  getAppointments,
+  cancelAppointment,
+  completeAppointment,
+};
