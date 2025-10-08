@@ -4,7 +4,7 @@ import { AppContext } from "../../context/AppContext";
 import { assets } from "../../assets/assets";
 
 const DoctorAppointments = () => {
-  const { getAppoinments, dToken, appointments } = useContext(DoctorContext);
+  const { getAppoinments, dToken, appointments, cancelAppointment } = useContext(DoctorContext);
   const { calculateAge, formatDate, currencySymbol } = useContext(AppContext);
   useEffect(() => {
     if (dToken) {
@@ -62,6 +62,7 @@ const DoctorAppointments = () => {
               ) : (
                 <div className="flex">
                   <img
+                  onClick={() => cancelAppointment(item._id)}
                     className="w-10 cursor-pointer"
                     src={assets.cancel_icon}
                     alt=""
