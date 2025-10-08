@@ -7,7 +7,7 @@ import { AppContext } from "../context/AppContext.jsx";
 const Login = () => {
 
 
-  const [state, setState] = useState("Admin");
+  const [state, setState] = useState("admin");
 
   const [email , setEmail] = useState('');
   const [password , setPassword]  = useState('');
@@ -20,7 +20,7 @@ const Login = () => {
     event.preventDefault();
 
     try {
-      if(state == 'Admin'){
+      if(state == 'admin'){
         // admin login logic
         const {data} = await axios.post(backendUrl + '/api/admin/login', {email, password});
         if(data.success){
@@ -70,7 +70,7 @@ const Login = () => {
         <button className="bg-primary text-white w-full py-2 rounded-md text-base">
           Login
         </button>
-        {state == "Admin" ? (
+        {state == "admin" ? (
           <p>
             Doctor Login{" "}
             <span
@@ -85,7 +85,7 @@ const Login = () => {
             Admin Login{" "}
             <span
               className="text-primary underline cursor-pointer"
-              onClick={() => setState("Admin")}
+              onClick={() => setState("admin")}
             >
               Click here
             </span>
