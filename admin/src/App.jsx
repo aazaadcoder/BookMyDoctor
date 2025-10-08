@@ -13,27 +13,30 @@ import AddDoctor from "./pages/Admin/AddDoctor";
 const App = () => {
   const { aToken } = useContext(AdminContext);
 
-  return aToken ? (
-    <div className="bg-[#F8F9FD]">
-
-      <ToastContainer />
-      <NavBar/>
-      <div className="flex items-start">
-        <SideBar/>
-        <Routes>
-          <Route path="/" element={<></>}/>
-          <Route path="/admin-dashboard" element={<Dashboard/>}/>
-          <Route path="/all-appointments" element={<AllAppointments/>}/>
-          <Route path="/doctor-list" element={<DoctorsList/>}/>
-          <Route path="/add-doctor" element={<AddDoctor/>}/>
-        </Routes>
-      </div>
-    </div>
-  ) : (
+  return (
     <>
-      <Login />
       <ToastContainer />
       {/* the notification will render in this component */}
+
+      {aToken ? (
+        <div className="bg-[#F8F9FD]">
+          <NavBar />
+          <div className="flex items-start">
+            <SideBar />
+            <Routes>
+              <Route path="/" element={<></>} />
+              <Route path="/admin-dashboard" element={<Dashboard />} />
+              <Route path="/all-appointments" element={<AllAppointments />} />
+              <Route path="/doctor-list" element={<DoctorsList />} />
+              <Route path="/add-doctor" element={<AddDoctor />} />
+            </Routes>
+          </div>
+        </div>
+      ) : (
+        <>
+          <Login />
+        </>
+      )}
     </>
   );
 };

@@ -1,51 +1,64 @@
 import React, { useContext, useState } from "react";
 import { assets } from "../assets/assets.js";
 import { AdminContext } from "../context/AdminContext.jsx";
-import axios from 'axios';                                                        //ntl
+import axios from "axios"; //ntl
 import { toast } from "react-toastify";
 import { AppContext } from "../context/AppContext.jsx";
+import { DoctorContext } from "../context/DoctorContext.jsx";
 const Login = () => {
-
-
   const [state, setState] = useState("admin");
 
-  const [email , setEmail] = useState('');
-  const [password , setPassword]  = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-  
-  const {setAToken} = useContext(AdminContext);
-  const {backendUrl} = useContext(AppContext);
+  const { setAToken } = useContext(AdminContext);
+  const { backendUrl } = useContext(AppContext);
+  const { setDToken } = useContext(DoctorContext);
 
   const onSubmitHandler = async (event) => {
     event.preventDefault();
 
     try {
-      if(state == 'admin'){
+      if (state == "Admin") {
         // admin login logic
-        const {data} = await axios.post(backendUrl + '/api/admin/login', {email, password});
-        if(data.success){
-          localStorage.setItem('aToken', data.token);                       // save the token to the local storage
+        const { data } = await axios.post(backendUrl + "/api/admin/login", {
+          email,
+          password,
+        });
+
+        if (data.success) {
+          toast.success("Admin Login Successful");
+          localStorage.setItem("aToken", data.token); // save the token to the local storage
           setAToken(data.token);
-        }else{
+        } else {
           toast.error(data.message);
         }
-
-      }else{
+      } else {
         // doctor login logic
 
+        const { data } = await axios.post(backendUrl + "/api/doctor/login", {
+          email,
+          password,
+        });
 
+        if (data.success) {
+          localStorage.setItem("dToken", data.token);
+          setDToken(data.token);
+          toast.success(data.message);
+        } else {
+          toast.error(data.message);
+        }
       }
-      
     } catch (error) {
       console.log(error.message);
     }
-  }
+  };
 
   return (
     <form onSubmit={onSubmitHandler} className="min-h-[80vh] flex items-center">
       <div className="flex flex-col gap-3 m-auto items-start p-8 min-w-[340px] sm:min-w-96 border rounded-xl text-[#5E5E5E] text-sm shadow-lg">
         <p className="text-2xl m-auto font-semibold">
-          <span className="text-primary">{state}</span>Login
+          <span className="text-primary">{state}</span> Login
         </p>
         <div className="w-full">
           <p>Email</p>
@@ -70,7 +83,7 @@ const Login = () => {
         <button className="bg-primary text-white w-full py-2 rounded-md text-base">
           Login
         </button>
-        {state == "admin" ? (
+        {state == "Admin" ? (
           <p>
             Doctor Login{" "}
             <span
@@ -85,7 +98,7 @@ const Login = () => {
             Admin Login{" "}
             <span
               className="text-primary underline cursor-pointer"
-              onClick={() => setState("admin")}
+              onClick={() => setState("Admin")}
             >
               Click here
             </span>
