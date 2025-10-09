@@ -53,7 +53,7 @@ const DoctorAppointments = () => {
                   {item.payment ? "Online" : "CASH"}
                 </p>
               </div>
-              <p className="max-sm:hidden">{calculateAge(item.userData.dob)}</p>
+              <p className="max-sm:hidden">{isNaN(calculateAge(item.userData.dob)) ? "-" : calculateAge(item.userData.dob)}</p>
               <p>
                 {formatDate(item.slotDate)}, {item.slotTime}
               </p>

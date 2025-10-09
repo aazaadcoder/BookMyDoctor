@@ -7,6 +7,7 @@ export const DoctorContext = createContext();
 const DoctorContextProvider = (props) => {
   const [dToken, setDToken] = useState(localStorage.getItem("dToken") || "");
   const [appointments, setAppointments] = useState(false);
+  const [dashboardData , setDashboardData] = useState(false);
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
   const getAppoinments = async () => {
@@ -41,6 +42,7 @@ const DoctorContextProvider = (props) => {
         toast.error(error.message);
     }
   };
+
   const completeAppointment = async (appointmentId) =>{
     try {
         const {data} = await axios.post(backendUrl + '/api/doctor/appointment-complete', {appointmentId}, {headers : {dToken}});
@@ -56,6 +58,22 @@ const DoctorContextProvider = (props) => {
     }
   };
 
+  const getDashboardData = async () =>{
+    try {
+        const {data} = await axios.get(backendUrl + '/api/doctor/dashboard-data', {headers : {dToken}});
+
+        if(data.success){
+            setDashboardData(data.dashboardData);
+            console.log(data.dashboardData);
+        }else{
+            toast.error(data.message);
+        }
+    } catch (error) {
+        console.log(error);
+        toast.error(error.message);
+    }
+  }
+
   const value = {
     dToken,
     setDToken,
@@ -65,6 +83,10 @@ const DoctorContextProvider = (props) => {
     getAppoinments,
     cancelAppointment,
     completeAppointment,
+    getDashboardData,
+    dashboardData, 
+    setDashboardData,
+
   };
   return (
     <DoctorContext.Provider value={value}>
