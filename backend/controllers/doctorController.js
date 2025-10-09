@@ -155,19 +155,18 @@ const completeAppointment = async (req, res) => {
 };
 
 // api to get doctor dashboard data
-
 const getDashboardData = async (req, res) => {
   // get total earning , list of patients , and count of patients
   try {
-    const {docId} = req;
+    const { docId } = req;
 
-    if(!docId){
-      return res.json({success : false, message : "Credentials Missing"});
+    if (!docId) {
+      return res.json({ success: false, message: "Credentials Missing" });
     }
     const appointmentData = await appointmentModel.find({ docId });
 
-    if(!appointmentData){
-      return res.json({success : false, message : "Unauthorized Access"});
+    if (!appointmentData) {
+      return res.json({ success: false, message: "Unauthorized Access" });
     }
 
     let earnings = 0;
@@ -181,24 +180,43 @@ const getDashboardData = async (req, res) => {
     let patient = [];
 
     appointmentData.map((item) => {
-      if(!patient.includes(item.userId)){
+      if (!patient.includes(item.userId)) {
         patient.push(item.userId);
       }
-    })
+    });
 
     const dashboardData = {
       earnings,
-      appointments : appointmentData.length,
-      patients : patient.length,
-      latestAppointments : appointmentData.reverse(),
-    }
+      appointments: appointmentData.length,
+      patients: patient.length,
+      latestAppointments: appointmentData.reverse(),
+    };
 
-    res.json({success : true, dashboardData});
+    res.json({ success: true, dashboardData });
   } catch (error) {
     console.log(error);
     res.json({ success: true, message: error.message });
   }
 };
+
+// api to get doctor profile
+const getDoctorProfile = async (req, res) => {
+  try {
+    const { docId } = req;
+
+    const docData = await doctorModel.findById(docId).select("-password");
+
+    if (!docData) {
+      return res.json({ success: false, message: "Doctor doesnot exists" });
+    }
+
+    res.json({ success: true, docData });
+  } catch (error) {
+    console.log(error);
+    res.json({ success: false, message: error.message });
+  }
+};
+
 
 export {
   changeAvailability,
@@ -207,5 +225,6 @@ export {
   getAppointments,
   cancelAppointment,
   completeAppointment,
-  getDashboardData
+  getDashboardData,
+  getDoctorProfile,
 };
