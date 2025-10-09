@@ -217,6 +217,21 @@ const getDoctorProfile = async (req, res) => {
   }
 };
 
+// api to update doctor profile
+
+const updateDoctorProfile = async (req, res) => {
+  try {
+    const { docId } = req;
+    const { address, fees, available } = req.body;
+
+    await doctorModel.findByIdAndUpdate(docId, { address, fees, available });
+
+    res.json({ success: true, message: "Profile Updated Successfuly" });
+  } catch (error) {
+    console.log(error);
+    res.json({ success: false, message: error.message });
+  }
+};
 
 export {
   changeAvailability,
@@ -227,4 +242,5 @@ export {
   completeAppointment,
   getDashboardData,
   getDoctorProfile,
+  updateDoctorProfile,
 };
