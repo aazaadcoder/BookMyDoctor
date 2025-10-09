@@ -76,6 +76,7 @@ const MyAppointments = () => {
               {!item.cancelled && <button onClick={() => cancelAppointment(item._id)} className='text-sm text-stone-500 text-center sm:min-w-48 py-2 border rounded hover:bg-red-600 hover:text-white transition-all duration-300'>Cancel Appointment</button>}
               {item.cancelled && <button className='text-sm sm:min-w-48 py-2 border rounded border-red-500 text-red-500 '>Appointment Cancelled</button>}
 
+              {/* todo update the code here to reflect iscompleted and payment */}
               
             </div>
           </div>

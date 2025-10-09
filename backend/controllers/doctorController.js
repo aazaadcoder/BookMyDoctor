@@ -153,6 +153,53 @@ const completeAppointment = async (req, res) => {
     res.json({ Success: false, message: error.message });
   }
 };
+
+// api to get doctor dashboard data
+
+const getDashboardData = async (req, res) => {
+  // get total earning , list of patients , and count of patients
+  try {
+    const {docId} = req;
+
+    if(!docId){
+      return res.json({success : false, message : "Credentials Missing"});
+    }
+    const appointmentData = await appointmentModel.find({ docId });
+
+    if(!appointmentData){
+      return res.json({success : false, message : "Unauthorized Access"});
+    }
+
+    let earnings = 0;
+
+    appointmentData.map((item) => {
+      if (item.isCompleted || item.payment) {
+        earnings += item.amount;
+      }
+    });
+
+    let patient = [];
+
+    appointmentData.map((item) => {
+      if(!patient.includes(item.userId)){
+        patient.push(item.userId);
+      }
+    })
+
+    const dashboardData = {
+      earnings,
+      appointments : appointmentData.length,
+      patients : patient.length,
+      latestAppointments : appointmentData.reverse(),
+    }
+
+    res.json({success : true, dashboardData});
+  } catch (error) {
+    console.log(error);
+    res.json({ success: true, message: error.message });
+  }
+};
+
 export {
   changeAvailability,
   getDoctorList,
@@ -160,4 +207,5 @@ export {
   getAppointments,
   cancelAppointment,
   completeAppointment,
+  getDashboardData
 };

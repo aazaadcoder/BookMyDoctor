@@ -17,8 +17,7 @@ const DoctorContextProvider = (props) => {
       );
 
       if (data.success) {
-        setAppointments(data.appointmentData.reverse());
-        console.log(data.appointmentData);
+        setAppointments(data.appointmentData);
       } else {
         toast.error(data.message);
       }
