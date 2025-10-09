@@ -16,30 +16,32 @@ import DoctorProfile from "./pages/Doctor/DoctorProfile";
 
 const App = () => {
   const { aToken } = useContext(AdminContext);
-  const {dToken} = useContext(DoctorContext);
+  const { dToken } = useContext(DoctorContext);
   return (
     <>
       <ToastContainer />
       {/* the notification will render in this component */}
 
-      {(aToken  || dToken)? (
+      {aToken || dToken ? (
         <div className="bg-[#F8F9FD]">
           <NavBar />
           <div className="flex items-start">
             <SideBar />
             <Routes>
-
               {/* admin routes */}
-              <Route path="/" element={<></>} />
+              {aToken && <Route path="/" element={<Dashboard />} />}
               <Route path="/admin-dashboard" element={<Dashboard />} />
               <Route path="/all-appointments" element={<AllAppointments />} />
               <Route path="/doctor-list" element={<DoctorsList />} />
               <Route path="/add-doctor" element={<AddDoctor />} />
-
               {/* doctor routes */}
+              {dToken && <Route path="/" element={<DoctorDashboard />} />}
               <Route path="/doctor-dashboard" element={<DoctorDashboard />} />
-              <Route path="/doctor-appointments" element={<DoctorAppointments />} />
-              <Route path="/doctor-profile" element={<DoctorProfile/>} />
+              <Route
+                path="/doctor-appointments"
+                element={<DoctorAppointments />}
+              />
+              <Route path="/doctor-profile" element={<DoctorProfile />} />
             </Routes>
           </div>
         </div>

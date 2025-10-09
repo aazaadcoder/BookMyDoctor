@@ -6,7 +6,7 @@ import { toast } from "react-toastify";
 import { AppContext } from "../context/AppContext.jsx";
 import { DoctorContext } from "../context/DoctorContext.jsx";
 const Login = () => {
-  const [state, setState] = useState("admin");
+  const [state, setState] = useState("Admin");
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -14,7 +14,6 @@ const Login = () => {
   const { setAToken } = useContext(AdminContext);
   const { backendUrl } = useContext(AppContext);
   const { setDToken } = useContext(DoctorContext);
-
   const onSubmitHandler = async (event) => {
     event.preventDefault();
 
