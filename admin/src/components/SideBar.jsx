@@ -8,7 +8,8 @@ const SideBar = () => {
   const { aToken } = useContext(AdminContext);
   const { dToken } = useContext(DoctorContext);
   return (
-    <div className="min-h-screen bg-white border-r">
+    // todo imporve the sidebar consitency 
+    <div className="sticky left-0 top-0 h-[calc(100vh-62.66px)] bg-white border-r z-30">
       {aToken && (
         <ul className="text-[#515151] mt-4">
           <NavLink

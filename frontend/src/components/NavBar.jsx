@@ -16,7 +16,7 @@ const NavBar = () => {
 
 
   return (
-    <div className="flex items-center justify-between text-sm py-4 mb-5 border-b border-b-grey-400">
+    <div className=" sticky top-0 left-0 z-10 bg-white flex items-center justify-between text-sm py-4 mb-5 border-b border-b-grey-400">
       <img
         onClick={() => {
           navigate("/");

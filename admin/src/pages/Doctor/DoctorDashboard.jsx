@@ -13,11 +13,12 @@ const DoctorDashboard = () => {
     completeAppointment,
   } = useContext(DoctorContext);
   const { formatDate, currencySymbol } = useContext(AppContext);
+  
   useEffect(() => {
     if (dToken) {
       getDashboardData();
     }
-  }, [dToken, cancelAppointment]);
+  }, [dToken]);
   return (
     dashboardData && (
       <div className="m-5">
