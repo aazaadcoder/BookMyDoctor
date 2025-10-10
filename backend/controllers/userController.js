@@ -2,7 +2,6 @@ import validator from "validator";
 import bycrpt from "bcrypt";
 import userModel from "../models/userModel.js";
 import jwt from "jsonwebtoken";
-import { useId } from "react";
 import { v2 as cloundinary } from "cloudinary";
 import doctorModel from "../models/doctorModel.js";
 import appointmentModel from "../models/appointmentModel.js";
